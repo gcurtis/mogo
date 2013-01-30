@@ -1,9 +1,9 @@
 package mogo
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
+	"reflect"
 )
 
 type Expectations struct {
@@ -17,16 +17,8 @@ func (this *Expectations) act(args ...interface{}) error {
 	}
 
 	for i, a := range args {
-		switch t := a.(type) {
-		case []byte:
-			b := this.acceptableParams[i].([]byte)
-			if !bytes.Equal(t, b) {
-				return errors.New(fmt.Sprintf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a))
-			}
-		default:
-			if this.acceptableParams[i] != a {
-				return errors.New(fmt.Sprintf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a))
-			}
+		if !reflect.DeepEqual(this.acceptableParams[i], a) {
+			return errors.New(fmt.Sprintf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a))
 		}
 	}
 
