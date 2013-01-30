@@ -6,10 +6,6 @@ type Returnable struct {
 	returns []interface{}
 }
 
-func (this *Returnable) AndReturn(r R) {
+func (this *Returnable) AndReturn(r ...interface{}) {
 	this.returns = r
-}
-
-func (this *Returnable) AndReturnOne(r interface{}) {
-	this.returns = R{r}
 }
