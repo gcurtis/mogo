@@ -34,7 +34,7 @@ func ExampleWriteNotCalled() {
 func ExampleWriteCalledWithReturnValues() {
 	mock := MockWriter{}
 	mock.Setup()
-	mock.ExpectThat("Write").IsCalled().AndReturns(R{10, nil})
+	mock.ExpectThat("Write").IsCalled().AndReturn(R{10, nil})
 
 	p := make([]byte, 10)
 	n, err := mock.Write(p)
@@ -56,7 +56,7 @@ func ExampleWriteWithParams() {
 	mock.Setup()
 
 	p := make([]byte, 10)
-	mock.ExpectThat("Write").IsCalled().WithParams(p).AndReturns(R{10, nil})
+	mock.ExpectThat("Write").IsCalled().WithParams(p).AndReturn(R{10, nil})
 
 	n, err := mock.Write(p)
 	fmt.Printf("Wrote %d bytes.", n)
