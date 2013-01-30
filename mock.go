@@ -14,8 +14,7 @@ func ActOnAndReturn(mock *Mock, method string, args ...interface{}) R {
 		return call.expectations.returns
 	}
 
-	err := UnexpectedReturnError{method: method}
-	panic(err)
+	return make(R, 32)
 }
 
 func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface{} {
@@ -25,8 +24,7 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 		return call.expectations.returns[0]
 	}
 
-	err := UnexpectedReturnError{method: method}
-	panic(err)
+	return make(R, 32)
 }
 
 func NewMock() *Mock {
