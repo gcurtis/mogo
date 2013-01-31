@@ -6,8 +6,14 @@ import (
 	"reflect"
 )
 
+type retDo struct {
+	Returnable
+	Doable
+}
+
 type Expectations struct {
 	Returnable
+	Doable
 	acceptableParams []interface{}
 }
 
@@ -25,10 +31,10 @@ func (this *Expectations) act(args ...interface{}) error {
 	return nil
 }
 
-func (this *Expectations) WithParams(args ...interface{}) *Returnable {
+func (this *Expectations) WithParams(args ...interface{}) *retDo {
 	if this.acceptableParams == nil {
 		this.acceptableParams = make([]interface{}, len(args))
 	}
 	this.acceptableParams = args
-	return &this.Returnable
+	return &retDo{this.Returnable, this.Doable}
 }

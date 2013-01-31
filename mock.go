@@ -11,6 +11,9 @@ func ActOnAndReturn(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
+		if call.expectations.f != nil {
+			return call.expectations.run(args...)
+		}
 		return call.expectations.returns
 	}
 
@@ -21,6 +24,9 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
+		if call.expectations.f != nil {
+			return call.expectations.run(args...)[0]
+		}
 		return call.expectations.returns[0]
 	}
 
