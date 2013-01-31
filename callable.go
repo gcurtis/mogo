@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-type Callable struct {
+type callable struct {
 	method         string
 	shouldBeCalled bool
 	wasCalled      bool
-	expectations   Expectations
+	expectations   expectations
 }
 
-func (this *Callable) actOn(args ...interface{}) error {
+func (this *callable) actOn(args ...interface{}) error {
 	this.wasCalled = true
 	if this.shouldBeCalled {
 		return this.expectations.act(args...)
@@ -21,7 +21,7 @@ func (this *Callable) actOn(args ...interface{}) error {
 	return errors.New(fmt.Sprintf(`%s was called but should not have been.`, this.method))
 }
 
-func (this *Callable) verify() error {
+func (this *callable) verify() error {
 	if this.shouldBeCalled && !this.wasCalled {
 		return errors.New(fmt.Sprintf(`%s should have been called but was not.`, this.method))
 	}
@@ -29,11 +29,11 @@ func (this *Callable) verify() error {
 	return nil
 }
 
-func (this *Callable) IsNotCalled() {
+func (this *callable) IsNotCalled() {
 	this.shouldBeCalled = false
 }
 
-func (this *Callable) IsCalled() *Expectations {
+func (this *callable) IsCalled() *expectations {
 	this.shouldBeCalled = true
 	return &this.expectations
 }

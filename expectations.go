@@ -7,17 +7,16 @@ import (
 )
 
 type retDo struct {
-	Returnable
-	Doable
+	returnable
+	doable
 }
 
-type Expectations struct {
-	Returnable
-	Doable
+type expectations struct {
+	retDo
 	acceptableParams []interface{}
 }
 
-func (this *Expectations) act(args ...interface{}) error {
+func (this *expectations) act(args ...interface{}) error {
 	if this.acceptableParams == nil {
 		return nil
 	}
@@ -31,10 +30,10 @@ func (this *Expectations) act(args ...interface{}) error {
 	return nil
 }
 
-func (this *Expectations) WithParams(args ...interface{}) *retDo {
+func (this *expectations) WithParams(args ...interface{}) *retDo {
 	if this.acceptableParams == nil {
 		this.acceptableParams = make([]interface{}, len(args))
 	}
 	this.acceptableParams = args
-	return &retDo{this.Returnable, this.Doable}
+	return &this.retDo
 }

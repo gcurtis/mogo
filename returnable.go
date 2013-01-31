@@ -2,10 +2,10 @@ package mogo
 
 type R []interface{}
 
-type Returnable struct {
+type returnable struct {
 	returns []interface{}
 }
 
-func (this *Returnable) AndReturn(r ...interface{}) {
+func (this *returnable) AndReturn(r ...interface{}) {
 	this.returns = r
 }

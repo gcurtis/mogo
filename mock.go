@@ -35,21 +35,21 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 
 func NewMock() *Mock {
 	return &Mock{
-		calls: make(map[string]*Callable),
+		calls: make(map[string]*callable),
 	}
 }
 
 type Mock struct {
-	calls map[string]*Callable
+	calls map[string]*callable
 	err   error
 }
 
 func (this *Mock) Setup() {
-	this.calls = make(map[string]*Callable)
+	this.calls = make(map[string]*callable)
 }
 
-func (this *Mock) ExpectThat(method string) *Callable {
-	call := &Callable{
+func (this *Mock) ExpectThat(method string) *callable {
+	call := &callable{
 		method: method,
 	}
 

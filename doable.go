@@ -4,15 +4,15 @@ import (
 	"reflect"
 )
 
-type Doable struct {
+type doable struct {
 	f interface{}
 }
 
-func (this *Doable) AndDo(f interface{}) {
+func (this *doable) AndDo(f interface{}) {
 	this.f = f
 }
 
-func (this *Doable) run(params ...interface{}) R {
+func (this *doable) run(params ...interface{}) R {
 	v := reflect.ValueOf(this.f)
 
 	in := make([]reflect.Value, len(params))
