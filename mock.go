@@ -2,8 +2,11 @@ package mogo
 
 func ActOn(mock *Mock, method string, args ...interface{}) {
 	call, ok := mock.calls[method]
-	if ok {
+	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
+		if call.expectations.f != nil {
+			call.expectations.run(args...)
+		}
 	}
 }
 
