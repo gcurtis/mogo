@@ -33,6 +33,21 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 	return make(R, 32)
 }
 
+type verifiable interface {
+	Verify() error
+}
+
+func VerifyAll(mocks ...verifiable) (err error) {
+	for _, m := range mocks {
+		err = m.Verify()
+		if err != nil {
+			return
+		}
+	}
+
+	return
+}
+
 func NewMock() *Mock {
 	return &Mock{
 		calls: make(map[string]*callable),
