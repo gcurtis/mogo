@@ -30,7 +30,7 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 		return call.expectations.returns[0]
 	}
 
-	return make(R, 32)
+	return nil
 }
 
 type verifiable interface {
