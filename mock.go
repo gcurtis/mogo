@@ -2,8 +2,8 @@ package mogo
 
 func act(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
-	if ok && call.shouldBeCalled {
-		mock.err = call.actOn(args...)
+	if ok {
+		call.actOn(args...)
 		if call.expect.isDoable() {
 			return call.expect.run(args...)
 		}
