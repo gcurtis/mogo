@@ -52,8 +52,9 @@ type Mock struct {
 	err   error
 }
 
-func (this *Mock) Setup() {
+func (this *Mock) Setup() *Mock {
 	this.calls = make(map[string]*callable)
+	return this
 }
 
 func (this *Mock) ExpectThat(method string) *callable {
