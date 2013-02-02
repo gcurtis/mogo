@@ -1,39 +1,29 @@
 package mogo
 
-func ActOn(mock *Mock, method string, args ...interface{}) {
+func act(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
-		if call.expect.f != nil {
-			call.expect.run(args...)
-		}
-	}
-}
-
-func ActOnAndReturn(mock *Mock, method string, args ...interface{}) R {
-	call, ok := mock.calls[method]
-	if ok && call.shouldBeCalled {
-		mock.err = call.actOn(args...)
-		if call.expect.f != nil {
+		if call.expect.isDoable() {
 			return call.expect.run(args...)
 		}
+
 		return call.expect.returns
 	}
 
 	return make(R, 32)
 }
 
-func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface{} {
-	call, ok := mock.calls[method]
-	if ok && call.shouldBeCalled {
-		mock.err = call.actOn(args...)
-		if call.expect.f != nil {
-			return call.expect.run(args...)[0]
-		}
-		return call.expect.returns[0]
-	}
+func ActOn(mock *Mock, method string, args ...interface{}) {
+	act(mock, method, args...)
+}
 
-	return nil
+func ActOnAndReturn(mock *Mock, method string, args ...interface{}) R {
+	return act(mock, method, args...)
+}
+
+func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface{} {
+	return act(mock, method, args...)[0]
 }
 
 type verifiable interface {

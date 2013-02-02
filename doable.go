@@ -12,6 +12,10 @@ func (this *doable) AndDo(f interface{}) {
 	this.f = f
 }
 
+func (this *doable) isDoable() bool {
+	return this.f != nil
+}
+
 func (this *doable) run(params ...interface{}) R {
 	v := reflect.ValueOf(this.f)
 
