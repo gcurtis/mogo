@@ -11,12 +11,12 @@ type retDo struct {
 	doable
 }
 
-type expectations struct {
+type expect struct {
 	retDo
 	acceptableParams []interface{}
 }
 
-func (this *expectations) act(args ...interface{}) error {
+func (this *expect) act(args ...interface{}) error {
 	if this.acceptableParams == nil {
 		return nil
 	}
@@ -30,7 +30,7 @@ func (this *expectations) act(args ...interface{}) error {
 	return nil
 }
 
-func (this *expectations) WithParams(args ...interface{}) *retDo {
+func (this *expect) WithParams(args ...interface{}) *retDo {
 	if this.acceptableParams == nil {
 		this.acceptableParams = make([]interface{}, len(args))
 	}

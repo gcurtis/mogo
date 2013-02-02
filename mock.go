@@ -4,8 +4,8 @@ func ActOn(mock *Mock, method string, args ...interface{}) {
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
-		if call.expectations.f != nil {
-			call.expectations.run(args...)
+		if call.expect.f != nil {
+			call.expect.run(args...)
 		}
 	}
 }
@@ -14,10 +14,10 @@ func ActOnAndReturn(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
-		if call.expectations.f != nil {
-			return call.expectations.run(args...)
+		if call.expect.f != nil {
+			return call.expect.run(args...)
 		}
-		return call.expectations.returns
+		return call.expect.returns
 	}
 
 	return make(R, 32)
@@ -27,10 +27,10 @@ func ActOnAndReturnOne(mock *Mock, method string, args ...interface{}) interface
 	call, ok := mock.calls[method]
 	if ok && call.shouldBeCalled {
 		mock.err = call.actOn(args...)
-		if call.expectations.f != nil {
-			return call.expectations.run(args...)[0]
+		if call.expect.f != nil {
+			return call.expect.run(args...)[0]
 		}
-		return call.expectations.returns[0]
+		return call.expect.returns[0]
 	}
 
 	return nil
