@@ -1,7 +1,6 @@
 package mogo
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 )
@@ -23,7 +22,7 @@ func (this *expect) act(args ...interface{}) error {
 
 	for i, a := range args {
 		if !reflect.DeepEqual(this.acceptableParams[i], a) {
-			return errors.New(fmt.Sprintf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a))
+			return fmt.Errorf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a)
 		}
 	}
 
