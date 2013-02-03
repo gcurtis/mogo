@@ -1,7 +1,6 @@
 package mogo
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -15,24 +14,31 @@ type expect struct {
 	acceptableParams []interface{}
 }
 
-func (this *expect) act(args ...interface{}) error {
+func (this *expect) act(args ...interface{}) (bool, R) {
 	if this.acceptableParams == nil {
-		return nil
+		return true, this.ret(args...)
 	}
 
 	for i, a := range args {
-		if !reflect.DeepEqual(this.acceptableParams[i], a) {
-			return fmt.Errorf(`Arg %d did not match ("%v" != "%v").`, i, this.acceptableParams[i], a)
+		if reflect.DeepEqual(this.acceptableParams[i], a) {
+			return true, this.ret(args...)
+		} else {
+			return false, DefaultR
 		}
 	}
 
-	return nil
+	return false, DefaultR
+}
+
+func (this *expect) ret(args ...interface{}) R {
+	if this.isDoable() {
+		return this.run(args...)
+	}
+
+	return this.returnable.ret()
 }
 
 func (this *expect) WithParams(args ...interface{}) *retDo {
-	if this.acceptableParams == nil {
-		this.acceptableParams = make([]interface{}, len(args))
-	}
 	this.acceptableParams = args
 	return &this.retDo
 }

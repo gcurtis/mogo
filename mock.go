@@ -3,15 +3,10 @@ package mogo
 func act(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
 	if ok {
-		call.actOn(args...)
-		if call.expect.isDoable() {
-			return call.expect.run(args...)
-		}
-
-		return call.expect.returns
+		return call.actOn(args...)
 	}
 
-	return make(R, 32)
+	return DefaultR
 }
 
 func ActOn(mock *Mock, method string, args ...interface{}) {
@@ -58,10 +53,14 @@ func (this *Mock) Setup() *Mock {
 }
 
 func (this *Mock) ExpectThat(method string) *callable {
-	call := &callable{
-		method: method,
+	call, ok := this.calls[method]
+	if ok {
+		return call
 	}
 
+	call = &callable{
+		method: method,
+	}
 	this.calls[method] = call
 	return call
 }

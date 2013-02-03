@@ -9,18 +9,26 @@ type callable struct {
 	expectCall bool
 	called     bool
 	set        bool
-	expect     expect
+	expects    []*expect
 	err        error
 }
 
-func (this *callable) actOn(args ...interface{}) {
-	this.called = true
+func (this *callable) actOn(args ...interface{}) R {
 	if !this.expectCall {
-		this.err = fmt.Errorf(`%s was called but should not have been.`, this.method)
-		return
+		this.err = fmt.Errorf(`"%s" was called but should not have been.`, this.method)
+		return DefaultR
 	}
 
-	this.expect.act(args...)
+	for _, e := range this.expects {
+		acted, r := e.act(args...)
+		if acted {
+			this.called = true
+			return r
+		}
+	}
+
+	this.err = fmt.Errorf(`"%s" wasn't called with the correct arguments.`, this.method)
+	return DefaultR
 }
 
 func (this *callable) verify() error {
@@ -29,7 +37,7 @@ func (this *callable) verify() error {
 	}
 
 	if this.expectCall && !this.called {
-		return fmt.Errorf(`%s should have been called but was not.`, this.method)
+		return fmt.Errorf(`"%s" should have been called but was not.`, this.method)
 	}
 
 	return nil
@@ -48,10 +56,12 @@ func (this *callable) IsNotCalled() {
 func (this *callable) IsCalled() *expect {
 	if this.set && !this.expectCall {
 		this.err = fmt.Errorf(`"%s" was expected to be called and not called.`, this.method)
-		return &this.expect
+	} else {
+		this.expectCall = true
+		this.set = true
 	}
 
-	this.expectCall = true
-	this.set = true
-	return &this.expect
+	e := &expect{}
+	this.expects = append(this.expects, e)
+	return e
 }
