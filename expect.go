@@ -68,6 +68,11 @@ func (this any) matches(i interface{}) bool {
 	return t == anyT
 }
 
+func (this any) zero() interface{} {
+	v := reflect.Zero(reflect.TypeOf(this.i))
+	return v.Interface()
+}
+
 func (this *expect) act(args ...interface{}) (bool, R) {
 	if this.acceptableParams == nil {
 		return true, this.ret(args...)

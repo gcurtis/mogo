@@ -10,8 +10,15 @@ type returnable struct {
 }
 
 func (this *returnable) AndReturn(r ...interface{}) {
-	this.set = true
 	this.returns = r
+
+	for i, r := range this.returns {
+		if a, ok := r.(any); ok {
+			this.returns[i] = a.zero()
+		}
+	}
+
+	this.set = true
 }
 
 func (this *returnable) ret() R {
