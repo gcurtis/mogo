@@ -1,8 +1,15 @@
 package mogo
 
 import (
+	"bytes"
 	"fmt"
 )
+
+const expectFmt = `"%s" wasn't called with the correct arguments.
+
+Actual:
+%s
+%s`
 
 type callable struct {
 	method     string
@@ -27,7 +34,26 @@ func (this *callable) actOn(args ...interface{}) R {
 		}
 	}
 
-	this.err = fmt.Errorf(`"%s" wasn't called with the correct arguments.`, this.method)
+	var actBuf bytes.Buffer
+	for i, a := range args {
+		actBuf.WriteString(fmt.Sprintf("\tParam %d: %#v\n", i, a))
+	}
+
+	var expBuf bytes.Buffer
+	for i, e := range this.expects {
+		expBuf.WriteString(fmt.Sprintf("\nExpected %d:\n", i))
+		for i, ep := range e.acceptableParams {
+			expBuf.WriteString(fmt.Sprintf("\tParam %d: %#v\n", i, ep))
+		}
+	}
+
+	// Remove trailing newlines
+	actStr := actBuf.String()
+	actStr = actStr[:len(actStr)-1]
+	expStr := expBuf.String()
+	expStr = expStr[:len(expStr)-1]
+
+	this.err = fmt.Errorf(expectFmt, this.method, actStr, expStr)
 	return DefaultR
 }
 
@@ -37,7 +63,7 @@ func (this *callable) verify() error {
 	}
 
 	if this.expectCall && !this.called {
-		return fmt.Errorf(`"%s" should have been called but was not.`, this.method)
+		return fmt.Errorf("\"%s\" should have been called but was not.\n\r", this.method)
 	}
 
 	return nil

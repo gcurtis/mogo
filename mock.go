@@ -1,5 +1,7 @@
 package mogo
 
+const MockErrFmt = "%v\n\t\t"
+
 func act(mock *Mock, method string, args ...interface{}) R {
 	call, ok := mock.calls[method]
 	if ok {

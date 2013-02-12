@@ -81,19 +81,15 @@ func (this *expect) act(args ...interface{}) (bool, R) {
 	for i, a := range args {
 		p := this.acceptableParams[i]
 		if q, ok := p.(any); ok {
-			if q.matches(a) {
-				return true, this.ret(args...)
-			} else {
+			if !q.matches(a) {
 				return false, DefaultR
 			}
-		} else if reflect.DeepEqual(p, a) {
-			return true, this.ret(args...)
-		} else {
+		} else if !reflect.DeepEqual(p, a) {
 			return false, DefaultR
 		}
 	}
 
-	return false, DefaultR
+	return true, this.ret(args...)
 }
 
 func (this *expect) ret(args ...interface{}) R {
